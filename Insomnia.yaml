@@ -1,0 +1,148 @@
+type: collection.insomnia.rest/5.0
+name: Event Mock
+meta:
+  id: wrk_e83f9957ebac4456a1ee247478fa5b64
+  created: 1755959432691
+  modified: 1755959432691
+  description: ""
+collection:
+  - name: Schema Registry
+    meta:
+      id: fld_7aac5471cf03458cb643e66cf0198672
+      created: 1756944470870
+      modified: 1756944509049
+      sortKey: -1756944470870
+      description: ""
+    children:
+      - url: http://localhost:8081/subjects
+        name: Consultar schemas
+        meta:
+          id: req_b1b0f3205e974f0a823c56ddda694926
+          created: 1756943607903
+          modified: 1756944585584
+          isPrivate: false
+          description: ""
+          sortKey: -1756944502789
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.2.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8081/subjects/usuarios-value/versions
+        name: Salvar schema
+        meta:
+          id: req_720fd0b0ed35405b91e0070b0a6b2850
+          created: 1756944532497
+          modified: 1756944555221
+          isPrivate: false
+          description: ""
+          sortKey: -1756944502889
+        method: POST
+        body:
+          mimeType: application/vnd.schemaregistry.v1+json
+          text: >-
+            {
+            	"schema": "{\"type\":\"record\",\"name\":\"User\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"age\",\"type\":\"int\"}]}"
+            }
+        headers:
+          - name: Content-Type
+            value: application/vnd.schemaregistry.v1+json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8081/subjects/usuarios-value/versions/latest
+        name: Detalhes Schema
+        meta:
+          id: req_98699fbd00824df19bc1d77068362932
+          created: 1756944637888
+          modified: 1756944653223
+          isPrivate: false
+          description: ""
+          sortKey: -1756944502689
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - url: http://localhost:5000/produce
+    name: Mock event
+    meta:
+      id: req_9d90a8b274b1444982eed08a818ba580
+      created: 1756943664161
+      modified: 1756944090474
+      isPrivate: false
+      description: ""
+      sortKey: -1756943664161
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"topic": "usuarios",
+        	"message": {
+        		"id": "u-1",
+        		"name": "Alice",
+        		"age": 30
+        	}
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: localhost:8080
+    name: Kafka UI
+    meta:
+      id: req_6e25e92be5014f91aa53eba3da63d19b
+      created: 1756944064253
+      modified: 1756945471811
+      isPrivate: false
+      description: ""
+      sortKey: -1756944064253
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.2.0
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_caa55babe372e4dc0d0eaea3372718d194e80804
+    created: 1755959432696
+    modified: 1755959432696
+environments:
+  name: Base Environment
+  meta:
+    id: env_caa55babe372e4dc0d0eaea3372718d194e80804
+    created: 1755959432694
+    modified: 1755959432694
+    isPrivate: false
