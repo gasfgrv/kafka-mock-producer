@@ -1,18 +1,3 @@
-# O que escrever
-
-explicar o código
-explicar o schema
-como funciona o kafka com schema registry e avro
-como funciona o código
-passo a passo de como usar
-
-# Passo a passo para rodar
-
-1. Subir os containers com `docker compose up -d`
-2. Criar o tópico no [kafka UI](http://localhost:8080/)
-3. Savar o schema no schema registry, usando a collection do insomnia
-4. Rodar a aplicação e enviar os eventos usando o insomnia
-
 # Kafka Avro Producer com Flask
 
 Este projeto implementa um **producer Kafka** que envia mensagens em formato **Avro** usando um schema definido em
