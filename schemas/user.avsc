@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "namespace": "com.exemplo",
+  "name": "User",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "age",
+      "type": "int"
+    }
+  ]
+}
