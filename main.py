@@ -22,7 +22,8 @@ parsed_schema = parse_schema(schema_dict)
 schema_registry_conf = {"url": SCHEMA_REGISTRY}
 schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
-avro_serializer = AvroSerializer(schema_registry_client, json.dumps(schema_dict), to_dict=None)
+avro_serializer = AvroSerializer(
+    schema_registry_client, json.dumps(schema_dict), to_dict=None)
 
 producer_config = {
     "bootstrap.servers": KAFKA_BROKER,
@@ -44,7 +45,10 @@ def topic_exists(topic):
 
 
 def validate_message(schema, message):
-    return validate(message, schema)
+    try:
+        return validate(message, schema)
+    except Exception:
+        return False
 
 
 @app.route("/produce", methods=["POST"])
