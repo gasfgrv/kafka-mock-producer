@@ -13,7 +13,7 @@ class AvroValidator:
 
     def is_valid(self, message: dict) -> bool:
         try:
-            self.logger.info(f"Validating message against schema")
+            self.logger.info("Validating message against schema")
             return validate(message, self.parsed_schema)
         except Exception as e:
             self.logger.error(f"Failed to validate message: {e}")
