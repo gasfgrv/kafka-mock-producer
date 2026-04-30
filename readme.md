@@ -17,6 +17,8 @@ O ambiente de execução é orquestrado com **Docker Compose**, incluindo Kafka,
 - Docker & Docker Compose
 - Kafka
 - Schema Registry
+- Pytest (testes unitários)
+- Freezegun (testes com tempo congelado)
 
 ---
 
@@ -61,6 +63,77 @@ Verifique os serviços:
 | `KAFKA_BROKER`    | `localhost:9092`        | Endpoint do broker Kafka   |
 | `SCHEMA_REGISTRY` | `http://localhost:8081` | URL do Schema Registry     |
 | `SCHEMA_PATH`     | `./schemas/user.avsc`   | Caminho para o schema Avro |
+
+---
+
+## Testes Unitários
+
+O projeto utiliza **Pytest** para testes unitários e **Freezegun** para congelar o tempo durante os testes, garantindo que todos os testes sejam executados com um timestamp determinístico de `2024-01-01T00:00:00`.
+
+### Executar os testes
+
+```bash
+# Instalar as dependências de teste
+pip install -r requirements.txt
+
+# Executar todos os testes
+pytest
+
+# Executar testes com verbose
+pytest -v
+
+# Executar um arquivo de teste específico
+pytest tests/test_producer.py
+
+# Executar com cobertura de código
+pytest --cov=src tests/
+```
+
+### Por que usar Freezegun?
+
+O **Freezegun** congela o tempo em um ponto específico, permitindo que:
+- Testes relacionados a timestamps sejam **determinísticos** e **reproduzíveis**
+- A chave de hash das mensagens seja sempre a mesma
+- Não haja variações nos testes devido a diferenças de tempo de execução
+
+### Exemplos de testes
+
+- **test_producer.py**: Valida a inicialização do `KafkaProducerService` e a serialização de mensagens com timestamp congelado
+- **test_schema_registry.py**: Testa integração com Schema Registry
+- **test_avro_validator.py**: Valida conformidade com schemas Avro
+- **test_producer_service.py**: Testa a lógica de negócio do serviço
+- **test_producer_controller.py**: Testa endpoints da API Flask
+
+---
+
+## Debug no VS Code
+
+Para executar o projeto no VS Code usando o ambiente virtual do projeto, adicione o seguinte arquivo em `.vscode/launch.json`:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Flask (app)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "FLASK_APP": "main.py",
+        "FLASK_ENV": "development"
+      },
+      "args": ["run", "--debug", "--host=0.0.0.0", "--port=5000"],
+      "justMyCode": true,
+      "python": "${workspaceFolder}/.venv/bin/python"
+    }
+  ]
+}
+```
+
+Com essa configuração, o VS Code usará o interpretador Python do `.venv` e iniciará a aplicação Flask no projeto.
 
 ---
 

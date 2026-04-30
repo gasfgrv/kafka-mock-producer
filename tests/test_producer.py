@@ -1,8 +1,12 @@
+from datetime import datetime
+import hashlib
 import json
 from typing import Generator
 from unittest.mock import patch, Mock
+from uuid import UUID
 
 import pytest
+from freezegun import freeze_time
 
 from src.kafka.producer import KafkaProducerService
 
@@ -44,7 +48,11 @@ def test_init_configures_producer_correctly(mock_dependencies: Generator, basic_
     })
 
 
-def test_send_calls_produce_and_flush(mock_dependencies: Generator, basic_schema: dict):
+@freeze_time("2024-01-01T00:00:00")
+@patch("src.kafka.producer.uuid4")
+def test_send_calls_produce_and_flush(mock_uuid: Mock, mock_dependencies: Generator, basic_schema: dict):
+    mock_uuid.return_value = UUID("123e4567-e89b-12d3-a456-426614174000")
+
     _, _, mock_producer_cls = mock_dependencies
     mock_producer_instance = Mock()
     mock_producer_cls.return_value = mock_producer_instance
@@ -58,9 +66,16 @@ def test_send_calls_produce_and_flush(mock_dependencies: Generator, basic_schema
     topic = "my-topic"
     record = {"id": "1"}
 
+    hash_dict = record.copy()
+    hash_dict.update({"timestamp": datetime.now().isoformat(),
+                     "uuid": "123e4567-e89b-12d3-a456-426614174000"})
+    serialized_record = json.dumps(hash_dict, sort_keys=True).encode("utf-8")
+    key = hashlib.md5(serialized_record).hexdigest()
+
     service.send(topic, record)
 
-    mock_producer_instance.produce.assert_called_once_with(topic=topic, value=record)
+    mock_producer_instance.produce.assert_called_once_with(
+        topic=topic, key=key, value=record)
     mock_producer_instance.flush.assert_called_once()
 
 
