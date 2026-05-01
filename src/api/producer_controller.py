@@ -15,7 +15,8 @@ def create_producer_blueprint(service: ProducerService, logger: Logger) -> Bluep
         message: dict = data.get("message")
 
         if not topic or not message:
-            logger.error(f"topic or message not provided: topic={topic}, message={message}")
+            logger.error(
+                f"topic or message not provided: topic={topic}, message={message}")
             return jsonify({"error": "topic and message must be provided"}), 400
 
         try:

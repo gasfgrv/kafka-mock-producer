@@ -18,9 +18,11 @@ def create_app() -> Flask:
     schema: dict = AvroSchemaLoader(SCHEMA_PATH).load()
     validator: AvroValidator = AvroValidator(schema, logger)
     admin: KafkaAdminService = KafkaAdminService(KAFKA_BROKER, logger)
-    producer: KafkaProducerService = KafkaProducerService(KAFKA_BROKER, SCHEMA_REGISTRY, schema, )
+    producer: KafkaProducerService = KafkaProducerService(
+        KAFKA_BROKER, SCHEMA_REGISTRY, schema, )
 
-    service: ProducerService = ProducerService(admin, validator, producer, logger, )
+    service: ProducerService = ProducerService(
+        admin, validator, producer, logger, )
 
     app: Flask = Flask(__name__)
 

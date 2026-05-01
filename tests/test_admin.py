@@ -50,7 +50,8 @@ def test_topic_exists_logs_error_on_exception(service: KafkaAdminService, mock_a
 def test_admin_client_initialized_with_correct_config(admin_client_cls: Mock, mock_logger: Mock):
     KafkaAdminService(broker="broker:29092", logger=mock_logger)
 
-    admin_client_cls.assert_called_once_with({"bootstrap.servers": "broker:29092"})
+    admin_client_cls.assert_called_once_with(
+        {"bootstrap.servers": "broker:29092"})
 
 
 if __name__ == "__main__":
