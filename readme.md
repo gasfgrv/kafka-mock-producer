@@ -86,7 +86,7 @@ pytest -v
 pytest tests/test_producer.py
 
 # Executar com cobertura de código
-pytest --cov=src tests/
+pytest -cov=src tests/
 ```
 
 ### Por que usar Freezegun?
@@ -116,7 +116,7 @@ Para executar o projeto no VS Code usando o ambiente virtual do projeto, adicion
   "configurations": [
     {
       "name": "Python: Flask (app)",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
@@ -134,6 +134,48 @@ Para executar o projeto no VS Code usando o ambiente virtual do projeto, adicion
 ```
 
 Com essa configuração, o VS Code usará o interpretador Python do `.venv` e iniciará a aplicação Flask no projeto.
+
+---
+
+## Headers das mensagens
+
+Cada mensagem enviada inclui automaticamente headers com informações do sistema que as enviou. Os headers incluem:
+
+| Header             | Descrição                                 |
+|-------------------|-------------------------------------------|
+| `platform`        | Sistema operacional (Linux, Windows, etc) |
+| `platform-release`| Versão do SO                              |
+| `platform-version`| Detalhes completos da versão do SO        |
+| `architecture`    | Arquitetura do processador (x86_64, arm64, etc) |
+| `hostname`        | Nome do host que enviou a mensagem        |
+| `ip-address`      | Endereço IP do host                       |
+| `mac-address`     | Endereço MAC do host                      |
+| `processor`       | Tipo/modelo do processador                |
+
+### Exemplo de mensagem com headers
+
+Quando uma mensagem é enviada, ela contém:
+
+```json
+{
+  "topic": "users",
+  "key": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "value": {
+    "id": "123",
+    "name": "João Silva"
+  },
+  "headers": {
+    "platform": "Linux",
+    "platform-release": "5.10.0-13-generic",
+    "platform-version": "#1-Ubuntu SMP",
+    "architecture": "x86_64",
+    "hostname": "ubuntu-server",
+    "ip-address": "192.168.1.100",
+    "mac-address": "00:1a:2b:3c:4d:5e",
+    "processor": "Intel(R) Core(TM) i7-9700K CPU"
+  }
+}
+```
 
 ---
 
