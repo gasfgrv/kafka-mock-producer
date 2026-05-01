@@ -24,6 +24,20 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: [ "CMD", "kafka-topics", "--bootstrap-server", "kafka:9092", "--list", "||", "exit", "1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka-init:
+    image: confluentinc/cp-kafka:7.5.0
+    volumes:
+      - ./docker/init-topics.sh:/opt/init-topics.sh
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: ["bash", "/opt/init-topics.sh"]
 
   schema-registry:
     image: confluentinc/cp-schema-registry:7.5.0
