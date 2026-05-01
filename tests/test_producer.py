@@ -50,8 +50,19 @@ def test_init_configures_producer_correctly(mock_dependencies: Generator, basic_
 
 @freeze_time("2024-01-01T00:00:00")
 @patch("src.kafka.producer.uuid4")
-def test_send_calls_produce_and_flush(mock_uuid: Mock, mock_dependencies: Generator, basic_schema: dict):
+@patch("src.kafka.producer.KafkaProducerService._KafkaProducerService__generate_record_headers")
+def test_send_calls_produce_and_flush(mock_headers: Mock, mock_uuid: Mock, mock_dependencies: Generator, basic_schema: dict):
     mock_uuid.return_value = UUID("123e4567-e89b-12d3-a456-426614174000")
+    mock_headers.return_value = {
+        "platform": "Linux",
+        "platform-release": "5.10.0",
+        "platform-version": "#1",
+        "architecture": "x86_64",
+        "hostname": "test-host",
+        "ip-address": "127.0.0.1",
+        "mac-address": "00:00:00:00:00:00",
+        "processor": "Intel"
+    }
 
     _, _, mock_producer_cls = mock_dependencies
     mock_producer_instance = Mock()
@@ -75,7 +86,7 @@ def test_send_calls_produce_and_flush(mock_uuid: Mock, mock_dependencies: Genera
     service.send(topic, record)
 
     mock_producer_instance.produce.assert_called_once_with(
-        topic=topic, key=key, value=record)
+        topic=topic, key=key, value=record, headers=mock_headers.return_value)
     mock_producer_instance.flush.assert_called_once()
 
 
